@@ -1,5 +1,11 @@
 package kashu.samples.geoip;
 
+import com.maxmind.db.CHMCache;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.record.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -11,7 +17,7 @@ import java.net.InetAddress;
 public class GeoIpTest {
 	public static void main(String[] args) throws IOException, GeoIp2Exception {
 		// A File object pointing to your GeoIP2 or GeoLite2 database
-		InputStream database = Main.class.getResourceAsStream("GeoLite2-City.mmdb");
+		InputStream database = GeoIpTest.class.getResourceAsStream("GeoLite2-City.mmdb");
 // This creates the DatabaseReader object, which should be reused across
 // lookups.
 		DatabaseReader reader = new DatabaseReader.Builder(database).withCache(new CHMCache()).build();
@@ -40,4 +46,5 @@ public class GeoIpTest {
 		Location location = response.getLocation();
 		System.out.println(location.getLatitude());  // 44.9733
 		System.out.println(location.getLongitude()); // -93.2323
+	}
 }

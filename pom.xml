@@ -33,6 +33,7 @@
         <module>RemoteIpFilter</module>
 		<module>jdk</module>
 		<module>libs</module>
+		<module>middlewares</module>
 	</modules>
 
     <dependencies>
