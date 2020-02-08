@@ -49,6 +49,12 @@
 			<artifactId>jol-core</artifactId>
 			<version>0.8</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.geccocrawler/gecco -->
+		<dependency>
+			<groupId>com.geccocrawler</groupId>
+			<artifactId>gecco</artifactId>
+			<version>1.3.0</version>
+		</dependency>
 	</dependencies>
 
 </project>
