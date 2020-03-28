@@ -7,7 +7,7 @@ import com.geccocrawler.gecco.spider.HtmlBean;
  * @author 卡叔
  * @date 2020/02/08
  */
-@Gecco(matchUrl="http://item.jd.com/{code}.html", pipelines="consolePipeline")
+@Gecco(matchUrl="https://item.jd.com/{code}.html*", pipelines="consolePipeline", timeout = 10000)
 public class ProductDetail implements HtmlBean {
 
 	private static final long serialVersionUID = -377053120283382723L;

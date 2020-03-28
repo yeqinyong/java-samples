@@ -12,7 +12,7 @@ import java.util.List;
  * @author 卡叔
  * @date 2020/02/08
  */
-@Gecco(matchUrl="http://www.jd.com/allSort.aspx", pipelines={"consolePipeline", "allSortPipeline"})
+@Gecco(matchUrl="https://www.jd.com/allSort.aspx", pipelines={"consolePipeline", "allSortPipeline"}, timeout = 10000)
 public class AllSort implements HtmlBean {
 
 	private static final long serialVersionUID = 665662335318691818L;

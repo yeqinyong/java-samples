@@ -13,7 +13,7 @@ import java.util.List;
  * @author 卡叔
  * @date 2020/02/08
  */
-@Gecco(matchUrl="http://list.jd.com/list.html?cat={cat}&delivery={delivery}&page={page}&JL={JL}&go=0", pipelines={"consolePipeline", "productListPipeline"})
+@Gecco(matchUrl="https://list.jd.com/list.html?cat={cat}&delivery={delivery}&page={page}&JL={JL}&go=0", pipelines={"consolePipeline", "productListPipeline"}, timeout = 10000)
 public class ProductList implements HtmlBean {
 
 	private static final long serialVersionUID = 4369792078959596706L;
