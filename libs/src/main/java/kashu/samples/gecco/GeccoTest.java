@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Gecco(matchUrl="https://github.com/{user}/{project}", pipelines="consolePipeline")
+@Gecco(matchUrl = "https://github.com/{user}/{project}", pipelines = "consolePipeline")
 public class GeccoTest implements HtmlBean {
 
 	private static final long serialVersionUID = -7127412585200687225L;
@@ -24,19 +24,19 @@ public class GeccoTest implements HtmlBean {
 	private String project;//url中的{project}值
 
 	@Text
-	@HtmlField(cssPath=".repository-meta-content")
+	@HtmlField(cssPath = ".repository-meta-content")
 	private String title;//抽取页面中的title
 
 	@Text
-	@HtmlField(cssPath=".pagehead-actions li:nth-child(2) .social-count")
+	@HtmlField(cssPath = ".pagehead-actions li:nth-child(2) .social-count")
 	private int star;//抽取页面中的star
 
 	@Text
-	@HtmlField(cssPath=".pagehead-actions li:nth-child(3) .social-count")
+	@HtmlField(cssPath = ".pagehead-actions li:nth-child(3) .social-count")
 	private int fork;//抽取页面中的fork
 
 	@Html
-	@HtmlField(cssPath=".entry-content")
+	@HtmlField(cssPath = ".entry-content")
 	private String readme;//抽取页面中的readme
 
 	public static void main(String[] args) {

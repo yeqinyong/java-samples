@@ -48,39 +48,39 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 @State(Scope.Thread)
 public class JMHSample_04_DefaultState {
 
-    double x = Math.PI;
+	double x = Math.PI;
 
-    @Benchmark
-    public void measure() {
-        x++;
-    }
+	@Benchmark
+	public void measure() {
+		x++;
+	}
 
-    /*
-     * ============================== HOW TO RUN THIS TEST: ====================================
-     *
-     * You can see the benchmark runs as usual.
-     *
-     * You can run this test:
-     *
-     * a) Via the command line:
-     *    $ mvn clean install
-     *    $ java -jar target/benchmarks.jar JMHSample_04 -wi 5 -i 5 -f 1
-     *    (we requested 5 warmup/measurement iterations, single fork)
-     *
-     * b) Via the Java API:
-     *    (see the JMH homepage for possible caveats when running from IDE:
-     *      http://openjdk.java.net/projects/code-tools/jmh/)
-     */
+	/*
+	 * ============================== HOW TO RUN THIS TEST: ====================================
+	 *
+	 * You can see the benchmark runs as usual.
+	 *
+	 * You can run this test:
+	 *
+	 * a) Via the command line:
+	 *    $ mvn clean install
+	 *    $ java -jar target/benchmarks.jar JMHSample_04 -wi 5 -i 5 -f 1
+	 *    (we requested 5 warmup/measurement iterations, single fork)
+	 *
+	 * b) Via the Java API:
+	 *    (see the JMH homepage for possible caveats when running from IDE:
+	 *      http://openjdk.java.net/projects/code-tools/jmh/)
+	 */
 
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(JMHSample_04_DefaultState.class.getSimpleName())
-                .warmupIterations(5)
-                .measurementIterations(5)
-                .forks(1)
-                .build();
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(JMHSample_04_DefaultState.class.getSimpleName())
+				.warmupIterations(5)
+				.measurementIterations(5)
+				.forks(1)
+				.build();
 
-        new Runner(opt).run();
-    }
+		new Runner(opt).run();
+	}
 
 }

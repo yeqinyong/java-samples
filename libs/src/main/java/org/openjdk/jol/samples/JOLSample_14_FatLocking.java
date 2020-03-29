@@ -42,69 +42,69 @@ import static java.lang.System.out;
  */
 public class JOLSample_14_FatLocking {
 
-    /*
-     * This is the example of fat locking.
-     *
-     * If VM detects contention on thread, it needs to delegate the
-     * access arbitrage to OS. That involves associating the object
-     * with the native lock, i.e. "inflating" the lock.
-     *
-     * In this example, we need to simulate the contention, this is
-     * why we have the additional thread. You can see the fresh object
-     * has the default mark word, the object before the lock was already
-     * acquired by the auxiliary thread, and when the lock was finally
-     * acquired by main thread, it had been inflated. The inflation stays
-     * there after the lock is released. You can also see the lock is
-     * "deflated" after the GC (the lock cleanup proceeds in safepoints,
-     * actually).
-     */
+	/*
+	 * This is the example of fat locking.
+	 *
+	 * If VM detects contention on thread, it needs to delegate the
+	 * access arbitrage to OS. That involves associating the object
+	 * with the native lock, i.e. "inflating" the lock.
+	 *
+	 * In this example, we need to simulate the contention, this is
+	 * why we have the additional thread. You can see the fresh object
+	 * has the default mark word, the object before the lock was already
+	 * acquired by the auxiliary thread, and when the lock was finally
+	 * acquired by main thread, it had been inflated. The inflation stays
+	 * there after the lock is released. You can also see the lock is
+	 * "deflated" after the GC (the lock cleanup proceeds in safepoints,
+	 * actually).
+	 */
 
-    public static void main(String[] args) throws Exception {
-        out.println(VM.current().details());
+	public static void main(String[] args) throws Exception {
+		out.println(VM.current().details());
 
-        final A a = new A();
+		final A a = new A();
 
-        ClassLayout layout = ClassLayout.parseInstance(a);
+		ClassLayout layout = ClassLayout.parseInstance(a);
 
-        out.println("**** Fresh object");
-        out.println(layout.toPrintable());
+		out.println("**** Fresh object");
+		out.println(layout.toPrintable());
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (a) {
-                    try {
-                        TimeUnit.SECONDS.sleep(10);
-                    } catch (InterruptedException e) {
-                        return;
-                    }
-                }
-            }
-        });
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				synchronized (a) {
+					try {
+						TimeUnit.SECONDS.sleep(10);
+					} catch (InterruptedException e) {
+						return;
+					}
+				}
+			}
+		});
 
-        t.start();
+		t.start();
 
-        TimeUnit.SECONDS.sleep(1);
+		TimeUnit.SECONDS.sleep(1);
 
-        out.println("**** Before the lock");
-        out.println(layout.toPrintable());
+		out.println("**** Before the lock");
+		out.println(layout.toPrintable());
 
-        synchronized (a) {
-            out.println("**** With the lock");
-            out.println(layout.toPrintable());
-        }
+		synchronized (a) {
+			out.println("**** With the lock");
+			out.println(layout.toPrintable());
+		}
 
-        out.println("**** After the lock");
-        out.println(layout.toPrintable());
+		out.println("**** After the lock");
+		out.println(layout.toPrintable());
 
-        System.gc();
+		System.gc();
 
-        out.println("**** After System.gc()");
-        out.println(layout.toPrintable());
-    }
+		out.println("**** After System.gc()");
+		out.println(layout.toPrintable());
+	}
 
-    public static class A {
-        // no fields
-    }
+	public static class A {
+		// no fields
+	}
 
 }

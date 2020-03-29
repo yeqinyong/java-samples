@@ -63,7 +63,7 @@ public class KolobokeTest {
 		SynchronizedMap rateMap = SynchronizedMap.withExpectedSize(10000_000);
 		System.out.println(rateMap.size());
 		for (int i = 0; i < 1000_0000; i++) {
-			rateMap.put((long)i, (short)1);
+			rateMap.put((long) i, (short) 1);
 		}
 
 		long end = System.currentTimeMillis();

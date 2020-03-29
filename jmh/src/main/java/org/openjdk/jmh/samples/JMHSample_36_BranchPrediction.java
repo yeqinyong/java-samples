@@ -49,57 +49,57 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class JMHSample_36_BranchPrediction {
 
-    /*
-     * This sample serves as a warning against regular data sets.
-     *
-     * It is very tempting to present a regular data set to benchmark, either due to
-     * naive generation strategy, or just from feeling better about regular data sets.
-     * Unfortunately, it frequently backfires: the regular datasets are known to be
-     * optimized well by software and hardware. This example exploits one of these
-     * optimizations: branch prediction.
-     *
-     * Imagine our benchmark selects the branch based on the array contents, as
-     * we are streaming through it:
-     */
+	/*
+	 * This sample serves as a warning against regular data sets.
+	 *
+	 * It is very tempting to present a regular data set to benchmark, either due to
+	 * naive generation strategy, or just from feeling better about regular data sets.
+	 * Unfortunately, it frequently backfires: the regular datasets are known to be
+	 * optimized well by software and hardware. This example exploits one of these
+	 * optimizations: branch prediction.
+	 *
+	 * Imagine our benchmark selects the branch based on the array contents, as
+	 * we are streaming through it:
+	 */
 
-    private static final int COUNT = 1024 * 1024;
+	private static final int COUNT = 1024 * 1024;
 
-    private byte[] sorted;
-    private byte[] unsorted;
+	private byte[] sorted;
+	private byte[] unsorted;
 
-    @Setup
-    public void setup() {
-        sorted = new byte[COUNT];
-        unsorted = new byte[COUNT];
-        Random random = new Random(1234);
-        random.nextBytes(sorted);
-        random.nextBytes(unsorted);
-        Arrays.sort(sorted);
-    }
+	@Setup
+	public void setup() {
+		sorted = new byte[COUNT];
+		unsorted = new byte[COUNT];
+		Random random = new Random(1234);
+		random.nextBytes(sorted);
+		random.nextBytes(unsorted);
+		Arrays.sort(sorted);
+	}
 
-    @Benchmark
-    @OperationsPerInvocation(COUNT)
-    public void sorted(Blackhole bh1, Blackhole bh2) {
-        for (byte v : sorted) {
-            if (v > 0) {
-                bh1.consume(v);
-            } else {
-                bh2.consume(v);
-            }
-        }
-    }
+	@Benchmark
+	@OperationsPerInvocation(COUNT)
+	public void sorted(Blackhole bh1, Blackhole bh2) {
+		for (byte v : sorted) {
+			if (v > 0) {
+				bh1.consume(v);
+			} else {
+				bh2.consume(v);
+			}
+		}
+	}
 
-    @Benchmark
-    @OperationsPerInvocation(COUNT)
-    public void unsorted(Blackhole bh1, Blackhole bh2) {
-        for (byte v : unsorted) {
-            if (v > 0) {
-                bh1.consume(v);
-            } else {
-                bh2.consume(v);
-            }
-        }
-    }
+	@Benchmark
+	@OperationsPerInvocation(COUNT)
+	public void unsorted(Blackhole bh1, Blackhole bh2) {
+		for (byte v : unsorted) {
+			if (v > 0) {
+				bh1.consume(v);
+			} else {
+				bh2.consume(v);
+			}
+		}
+	}
 
     /*
         There is a substantial difference in performance for these benchmarks!
@@ -128,25 +128,25 @@ public class JMHSample_36_BranchPrediction {
      */
 
 
-    /*
-     * ============================== HOW TO RUN THIS TEST: ====================================
-     *
-     * You can run this test:
-     *
-     * a) Via the command line:
-     *    $ mvn clean install
-     *    $ java -jar target/benchmarks.jar JMHSample_36
-     *
-     * b) Via the Java API:
-     *    (see the JMH homepage for possible caveats when running from IDE:
-     *      http://openjdk.java.net/projects/code-tools/jmh/)
-     */
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(".*" + JMHSample_36_BranchPrediction.class.getSimpleName() + ".*")
-                .build();
+	/*
+	 * ============================== HOW TO RUN THIS TEST: ====================================
+	 *
+	 * You can run this test:
+	 *
+	 * a) Via the command line:
+	 *    $ mvn clean install
+	 *    $ java -jar target/benchmarks.jar JMHSample_36
+	 *
+	 * b) Via the Java API:
+	 *    (see the JMH homepage for possible caveats when running from IDE:
+	 *      http://openjdk.java.net/projects/code-tools/jmh/)
+	 */
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(".*" + JMHSample_36_BranchPrediction.class.getSimpleName() + ".*")
+				.build();
 
-        new Runner(opt).run();
-    }
+		new Runner(opt).run();
+	}
 
 }

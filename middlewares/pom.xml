@@ -11,11 +11,11 @@
 
 	<artifactId>middlewares</artifactId>
 
-<dependencies>
-	<dependency>
-		<groupId>org.redisson</groupId>
-		<artifactId>redisson</artifactId>
-		<version>3.3.1</version>
-	</dependency>
-</dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+			<version>3.3.1</version>
+		</dependency>
+	</dependencies>
 </project>

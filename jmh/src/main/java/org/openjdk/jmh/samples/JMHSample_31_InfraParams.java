@@ -54,90 +54,90 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class JMHSample_31_InfraParams {
 
-    /*
-     * There is a way to query JMH about the current running mode. This is
-     * possible with three infrastructure objects we can request to be injected:
-     *   - BenchmarkParams: covers the benchmark-global configuration
-     *   - IterationParams: covers the current iteration configuration
-     *   - ThreadParams: covers the specifics about threading
-     *
-     * Suppose we want to check how the ConcurrentHashMap scales under different
-     * parallelism levels. We can put concurrencyLevel in @Param, but it sometimes
-     * inconvenient if, say, we want it to follow the @Threads count. Here is
-     * how we can query JMH about how many threads was requested for the current run,
-     * and put that into concurrencyLevel argument for CHM constructor.
-     */
+	/*
+	 * There is a way to query JMH about the current running mode. This is
+	 * possible with three infrastructure objects we can request to be injected:
+	 *   - BenchmarkParams: covers the benchmark-global configuration
+	 *   - IterationParams: covers the current iteration configuration
+	 *   - ThreadParams: covers the specifics about threading
+	 *
+	 * Suppose we want to check how the ConcurrentHashMap scales under different
+	 * parallelism levels. We can put concurrencyLevel in @Param, but it sometimes
+	 * inconvenient if, say, we want it to follow the @Threads count. Here is
+	 * how we can query JMH about how many threads was requested for the current run,
+	 * and put that into concurrencyLevel argument for CHM constructor.
+	 */
 
-    static final int THREAD_SLICE = 1000;
+	static final int THREAD_SLICE = 1000;
 
-    private ConcurrentHashMap<String, String> mapSingle;
-    private ConcurrentHashMap<String, String> mapFollowThreads;
+	private ConcurrentHashMap<String, String> mapSingle;
+	private ConcurrentHashMap<String, String> mapFollowThreads;
 
-    @Setup
-    public void setup(BenchmarkParams params) {
-        int capacity = 16 * THREAD_SLICE * params.getThreads();
-        mapSingle        = new ConcurrentHashMap<>(capacity, 0.75f, 1);
-        mapFollowThreads = new ConcurrentHashMap<>(capacity, 0.75f, params.getThreads());
-    }
+	@Setup
+	public void setup(BenchmarkParams params) {
+		int capacity = 16 * THREAD_SLICE * params.getThreads();
+		mapSingle = new ConcurrentHashMap<>(capacity, 0.75f, 1);
+		mapFollowThreads = new ConcurrentHashMap<>(capacity, 0.75f, params.getThreads());
+	}
 
-    /*
-     * Here is another neat trick. Generate the distinct set of keys for all threads:
-     */
+	/*
+	 * Here is another neat trick. Generate the distinct set of keys for all threads:
+	 */
 
-    @State(Scope.Thread)
-    public static class Ids {
-        private List<String> ids;
+	@State(Scope.Thread)
+	public static class Ids {
+		private List<String> ids;
 
-        @Setup
-        public void setup(ThreadParams threads) {
-            ids = new ArrayList<>();
-            for (int c = 0; c < THREAD_SLICE; c++) {
-                ids.add("ID" + (THREAD_SLICE * threads.getThreadIndex() + c));
-            }
-        }
-    }
+		@Setup
+		public void setup(ThreadParams threads) {
+			ids = new ArrayList<>();
+			for (int c = 0; c < THREAD_SLICE; c++) {
+				ids.add("ID" + (THREAD_SLICE * threads.getThreadIndex() + c));
+			}
+		}
+	}
 
-    @Benchmark
-    public void measureDefault(Ids ids) {
-        for (String s : ids.ids) {
-            mapSingle.remove(s);
-            mapSingle.put(s, s);
-        }
-    }
+	@Benchmark
+	public void measureDefault(Ids ids) {
+		for (String s : ids.ids) {
+			mapSingle.remove(s);
+			mapSingle.put(s, s);
+		}
+	}
 
-    @Benchmark
-    public void measureFollowThreads(Ids ids) {
-        for (String s : ids.ids) {
-            mapFollowThreads.remove(s);
-            mapFollowThreads.put(s, s);
-        }
-    }
+	@Benchmark
+	public void measureFollowThreads(Ids ids) {
+		for (String s : ids.ids) {
+			mapFollowThreads.remove(s);
+			mapFollowThreads.put(s, s);
+		}
+	}
 
-    /*
-     * ============================== HOW TO RUN THIS TEST: ====================================
-     *
-     * You can run this test:
-     *
-     * a) Via the command line:
-     *    $ mvn clean install
-     *    $ java -jar target/benchmarks.jar JMHSample_31 -wi 5 -i 5 -t 4 -f 5
-     *    (we requested 5 warmup iterations, 5 iterations, 2 threads, and 5 forks)
-     *
-     * b) Via the Java API:
-     *    (see the JMH homepage for possible caveats when running from IDE:
-     *      http://openjdk.java.net/projects/code-tools/jmh/)
-     */
+	/*
+	 * ============================== HOW TO RUN THIS TEST: ====================================
+	 *
+	 * You can run this test:
+	 *
+	 * a) Via the command line:
+	 *    $ mvn clean install
+	 *    $ java -jar target/benchmarks.jar JMHSample_31 -wi 5 -i 5 -t 4 -f 5
+	 *    (we requested 5 warmup iterations, 5 iterations, 2 threads, and 5 forks)
+	 *
+	 * b) Via the Java API:
+	 *    (see the JMH homepage for possible caveats when running from IDE:
+	 *      http://openjdk.java.net/projects/code-tools/jmh/)
+	 */
 
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(JMHSample_31_InfraParams.class.getSimpleName())
-                .warmupIterations(5)
-                .measurementIterations(5)
-                .threads(4)
-                .forks(5)
-                .build();
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(JMHSample_31_InfraParams.class.getSimpleName())
+				.warmupIterations(5)
+				.measurementIterations(5)
+				.threads(4)
+				.forks(5)
+				.build();
 
-        new Runner(opt).run();
-    }
+		new Runner(opt).run();
+	}
 
 }

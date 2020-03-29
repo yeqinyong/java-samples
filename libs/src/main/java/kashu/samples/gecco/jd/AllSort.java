@@ -12,7 +12,7 @@ import java.util.List;
  * @author 卡叔
  * @date 2020/02/08
  */
-@Gecco(matchUrl="https://www.jd.com/allSort.aspx", pipelines={"consolePipeline", "allSortPipeline"}, timeout = 10000)
+@Gecco(matchUrl = "https://www.jd.com/allSort.aspx", pipelines = {"consolePipeline", "allSortPipeline"}, timeout = 10000)
 public class AllSort implements HtmlBean {
 
 	private static final long serialVersionUID = 665662335318691818L;
@@ -21,11 +21,11 @@ public class AllSort implements HtmlBean {
 	private HttpRequest request;
 
 	//手机
-	@HtmlField(cssPath=".category-items > div:nth-child(1) > div:nth-child(2) > div.mc > div.items > dl")
+	@HtmlField(cssPath = ".category-items > div:nth-child(1) > div:nth-child(2) > div.mc > div.items > dl")
 	private List<Category> mobile;
 
 	//家用电器
-	@HtmlField(cssPath=".category-items > div:nth-child(1) > div:nth-child(3) > div.mc > div.items > dl")
+	@HtmlField(cssPath = ".category-items > div:nth-child(1) > div:nth-child(3) > div.mc > div.items > dl")
 	private List<Category> domestic;
 
 	public List<Category> getMobile() {

@@ -20,10 +20,10 @@ public class ProductListPipeline implements Pipeline<ProductList> {
 		int currPage = productList.getCurrPage();
 		int nextPage = currPage + 1;
 		int totalPage = productList.getTotalPage();
-		if(nextPage <= totalPage) {
+		if (nextPage <= totalPage) {
 			String nextUrl = "";
 			String currUrl = currRequest.getUrl();
-			if(currUrl.indexOf("page=") != -1) {
+			if (currUrl.indexOf("page=") != -1) {
 				nextUrl = StringUtils.replaceOnce(currUrl, "page=" + currPage, "page=" + nextPage);
 			} else {
 				nextUrl = currUrl + "&" + "page=" + nextPage;

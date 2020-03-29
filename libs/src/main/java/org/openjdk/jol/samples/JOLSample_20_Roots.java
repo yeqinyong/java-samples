@@ -43,105 +43,123 @@ import static java.lang.System.out;
  */
 public class JOLSample_20_Roots {
 
-    /*
-     * The example how VM traverses the root sets.
-     *
-     * During the GC, object reachability graph should be traversed
-     * starting from somewhere. The root set is the set of intrinsically
-     * reachable objects. Static fields are the part of root set, local
-     * variables are the part of root set as well.
-     *
-     * In this example, we build the "ring" of objects, and reference
-     * only the single link from that ring from the local variable.
-     * This will have the effect of having the different parts of ring
-     * in the root set, which will, in the end, change the ring layout
-     * in memory.
-     */
+	/*
+	 * The example how VM traverses the root sets.
+	 *
+	 * During the GC, object reachability graph should be traversed
+	 * starting from somewhere. The root set is the set of intrinsically
+	 * reachable objects. Static fields are the part of root set, local
+	 * variables are the part of root set as well.
+	 *
+	 * In this example, we build the "ring" of objects, and reference
+	 * only the single link from that ring from the local variable.
+	 * This will have the effect of having the different parts of ring
+	 * in the root set, which will, in the end, change the ring layout
+	 * in memory.
+	 */
 
-    static volatile Object sink;
+	static volatile Object sink;
 
-    public interface L {
-        L link();
-        void bind(L l);
-    }
+	public interface L {
+		L link();
 
-    public static abstract class AL implements L {
-        L l;
-        public L link() { return l; }
-        public void bind(L l) { this.l = l; }
-    }
+		void bind(L l);
+	}
 
-    public static class L1 extends AL {}
-    public static class L2 extends AL {}
-    public static class L3 extends AL {}
-    public static class L4 extends AL {}
-    public static class L5 extends AL {}
-    public static class L6 extends AL {}
+	public static abstract class AL implements L {
+		L l;
 
-    public static void main(String[] args) throws Exception {
-        out.println(VM.current().details());
+		public L link() {
+			return l;
+		}
 
-        PrintWriter pw = new PrintWriter(System.out, true);
+		public void bind(L l) {
+			this.l = l;
+		}
+	}
 
-        // create links
-        L l1 = new L1();
-        L l2 = new L2();
-        L l3 = new L3();
-        L l4 = new L4();
-        L l5 = new L5();
-        L l6 = new L6();
+	public static class L1 extends AL {
+	}
 
-        // bind the ring
-        l1.bind(l2);
-        l2.bind(l3);
-        l3.bind(l4);
-        l4.bind(l5);
-        l5.bind(l6);
-        l6.bind(l1);
+	public static class L2 extends AL {
+	}
 
-        // current root
-        L r = l1;
+	public static class L3 extends AL {
+	}
 
-        // break all other roots
-        l1 = l2 = l3 = l4 = l5 = l6 = null;
+	public static class L4 extends AL {
+	}
 
-        long lastAddr = VM.current().addressOf(r);
-        pw.printf("Fresh object is at %x%n", lastAddr);
+	public static class L5 extends AL {
+	}
 
-        int moves = 0;
-        for (int i = 0; i < 100000; i++) {
+	public static class L6 extends AL {
+	}
 
-            // scan for L1 and determine it's address
-            L s = r;
-            while (!((s = s.link()) instanceof L1)) ;
+	public static void main(String[] args) throws Exception {
+		out.println(VM.current().details());
 
-            long cur = VM.current().addressOf(s);
-            s = null;
+		PrintWriter pw = new PrintWriter(System.out, true);
 
-            // if L1 had moved, then probably the entire ring had also moved
-            if (cur != lastAddr) {
-                moves++;
-                pw.printf("*** Move %2d, L1 is at %x%n", moves, cur);
-                pw.println("*** Root is " + r.getClass());
+		// create links
+		L l1 = new L1();
+		L l2 = new L2();
+		L l3 = new L3();
+		L l4 = new L4();
+		L l5 = new L5();
+		L l6 = new L6();
 
-                pw.println(GraphLayout.parseInstance(r).toPrintable());
+		// bind the ring
+		l1.bind(l2);
+		l2.bind(l3);
+		l3.bind(l4);
+		l4.bind(l5);
+		l5.bind(l6);
+		l6.bind(l1);
 
-                // select another link
-                Random random = new Random();
-                for (int c = 0; c < random.nextInt(100); c++) {
-                    r = r.link();
-                }
+		// current root
+		L r = l1;
 
-                lastAddr = cur;
-            }
+		// break all other roots
+		l1 = l2 = l3 = l4 = l5 = l6 = null;
 
-            // make garbage
-            for (int c = 0; c < 10000; c++) {
-                sink = new Object();
-            }
-        }
+		long lastAddr = VM.current().addressOf(r);
+		pw.printf("Fresh object is at %x%n", lastAddr);
 
-        pw.close();
-    }
+		int moves = 0;
+		for (int i = 0; i < 100000; i++) {
+
+			// scan for L1 and determine it's address
+			L s = r;
+			while (!((s = s.link()) instanceof L1)) ;
+
+			long cur = VM.current().addressOf(s);
+			s = null;
+
+			// if L1 had moved, then probably the entire ring had also moved
+			if (cur != lastAddr) {
+				moves++;
+				pw.printf("*** Move %2d, L1 is at %x%n", moves, cur);
+				pw.println("*** Root is " + r.getClass());
+
+				pw.println(GraphLayout.parseInstance(r).toPrintable());
+
+				// select another link
+				Random random = new Random();
+				for (int c = 0; c < random.nextInt(100); c++) {
+					r = r.link();
+				}
+
+				lastAddr = cur;
+			}
+
+			// make garbage
+			for (int c = 0; c < 10000; c++) {
+				sink = new Object();
+			}
+		}
+
+		pw.close();
+	}
 
 }

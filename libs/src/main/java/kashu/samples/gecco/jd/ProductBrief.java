@@ -12,22 +12,22 @@ public class ProductBrief implements HtmlBean {
 	private static final long serialVersionUID = -377053120283382723L;
 
 	@Attr("data-sku")
-	@HtmlField(cssPath=".j-sku-item")
+	@HtmlField(cssPath = ".j-sku-item")
 	private String code;
 
 	@Text
-	@HtmlField(cssPath=".p-name> a > em")
+	@HtmlField(cssPath = ".p-name> a > em")
 	private String title;
 
 	@Image({"data-lazy-img", "src"})
-	@HtmlField(cssPath=".p-img > a > img")
+	@HtmlField(cssPath = ".p-img > a > img")
 	private String preview;
 
 	// 这里需要说明一下@Href(click=true)的click属性，click属性形象的说明了，
 	// 这个链接我们希望gecco继续点击抓取。对于增加了click=true的链接，
 	// gecco会自动加入下载队列中，不需要在手动调用SchedulerContext.into()增加
-	@Href(click=true)
-	@HtmlField(cssPath=".p-name > a")
+	@Href(click = true)
+	@HtmlField(cssPath = ".p-name > a")
 	private String detailUrl;
 
 	public String getTitle() {

@@ -48,48 +48,48 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class JMHSample_37_CacheAccess {
 
-    /*
-     * This sample serves as a warning against subtle differences in cache access patterns.
-     *
-     * Many performance differences may be explained by the way tests are accessing memory.
-     * In the example below, we walk the matrix either row-first, or col-first:
-     */
+	/*
+	 * This sample serves as a warning against subtle differences in cache access patterns.
+	 *
+	 * Many performance differences may be explained by the way tests are accessing memory.
+	 * In the example below, we walk the matrix either row-first, or col-first:
+	 */
 
-    private final static int COUNT = 4096;
-    private final static int MATRIX_SIZE = COUNT * COUNT;
+	private final static int COUNT = 4096;
+	private final static int MATRIX_SIZE = COUNT * COUNT;
 
-    private int[][] matrix;
+	private int[][] matrix;
 
-    @Setup
-    public void setup() {
-        matrix = new int[COUNT][COUNT];
-        Random random = new Random(1234);
-        for (int i = 0; i < COUNT; i++) {
-            for (int j = 0; j < COUNT; j++) {
-                matrix[i][j] = random.nextInt();
-            }
-        }
-    }
+	@Setup
+	public void setup() {
+		matrix = new int[COUNT][COUNT];
+		Random random = new Random(1234);
+		for (int i = 0; i < COUNT; i++) {
+			for (int j = 0; j < COUNT; j++) {
+				matrix[i][j] = random.nextInt();
+			}
+		}
+	}
 
-    @Benchmark
-    @OperationsPerInvocation(MATRIX_SIZE)
-    public void colFirst(Blackhole bh) {
-        for (int c = 0; c < COUNT; c++) {
-            for (int r = 0; r < COUNT; r++) {
-                bh.consume(matrix[r][c]);
-            }
-        }
-    }
+	@Benchmark
+	@OperationsPerInvocation(MATRIX_SIZE)
+	public void colFirst(Blackhole bh) {
+		for (int c = 0; c < COUNT; c++) {
+			for (int r = 0; r < COUNT; r++) {
+				bh.consume(matrix[r][c]);
+			}
+		}
+	}
 
-    @Benchmark
-    @OperationsPerInvocation(MATRIX_SIZE)
-    public void rowFirst(Blackhole bh) {
-        for (int r = 0; r < COUNT; r++) {
-            for (int c = 0; c < COUNT; c++) {
-                bh.consume(matrix[r][c]);
-            }
-        }
-    }
+	@Benchmark
+	@OperationsPerInvocation(MATRIX_SIZE)
+	public void rowFirst(Blackhole bh) {
+		for (int r = 0; r < COUNT; r++) {
+			for (int c = 0; c < COUNT; c++) {
+				bh.consume(matrix[r][c]);
+			}
+		}
+	}
 
     /*
         Notably, colFirst accesses are much slower, and that's not a surprise: Java's multidimensional
@@ -118,25 +118,25 @@ public class JMHSample_37_CacheAccess {
         by the memory locality issues.
      */
 
-    /*
-     * ============================== HOW TO RUN THIS TEST: ====================================
-     *
-     * You can run this test:
-     *
-     * a) Via the command line:
-     *    $ mvn clean install
-     *    $ java -jar target/benchmarks.jar JMHSample_37
-     *
-     * b) Via the Java API:
-     *    (see the JMH homepage for possible caveats when running from IDE:
-     *      http://openjdk.java.net/projects/code-tools/jmh/)
-     */
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(".*" + JMHSample_37_CacheAccess.class.getSimpleName() + ".*")
-                .build();
+	/*
+	 * ============================== HOW TO RUN THIS TEST: ====================================
+	 *
+	 * You can run this test:
+	 *
+	 * a) Via the command line:
+	 *    $ mvn clean install
+	 *    $ java -jar target/benchmarks.jar JMHSample_37
+	 *
+	 * b) Via the Java API:
+	 *    (see the JMH homepage for possible caveats when running from IDE:
+	 *      http://openjdk.java.net/projects/code-tools/jmh/)
+	 */
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(".*" + JMHSample_37_CacheAccess.class.getSimpleName() + ".*")
+				.build();
 
-        new Runner(opt).run();
-    }
+		new Runner(opt).run();
+	}
 
 }

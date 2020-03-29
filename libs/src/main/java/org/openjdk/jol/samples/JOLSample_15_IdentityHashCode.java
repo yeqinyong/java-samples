@@ -40,34 +40,34 @@ import static java.lang.System.out;
  */
 public class JOLSample_15_IdentityHashCode {
 
-    /*
-     * The example for identity hash code.
-     *
-     * The identity hash code, once computed, should stay the same.
-     * HotSpot opts to store the hash code in the mark word as well.
-     * You can clearly see the hash code bytes in the header once
-     * it was computed.
-     */
+	/*
+	 * The example for identity hash code.
+	 *
+	 * The identity hash code, once computed, should stay the same.
+	 * HotSpot opts to store the hash code in the mark word as well.
+	 * You can clearly see the hash code bytes in the header once
+	 * it was computed.
+	 */
 
-    public static void main(String[] args) throws Exception {
-        out.println(VM.current().details());
+	public static void main(String[] args) throws Exception {
+		out.println(VM.current().details());
 
-        final A a = new A();
+		final A a = new A();
 
-        ClassLayout layout = ClassLayout.parseInstance(a);
+		ClassLayout layout = ClassLayout.parseInstance(a);
 
-        out.println("**** Fresh object");
-        out.println(layout.toPrintable());
+		out.println("**** Fresh object");
+		out.println(layout.toPrintable());
 
-        out.println("hashCode: " + Integer.toHexString(a.hashCode()));
-        out.println();
+		out.println("hashCode: " + Integer.toHexString(a.hashCode()));
+		out.println();
 
-        out.println("**** After identityHashCode()");
-        out.println(layout.toPrintable());
-    }
+		out.println("**** After identityHashCode()");
+		out.println(layout.toPrintable());
+	}
 
-    public static class A {
-        // no fields
-    }
+	public static class A {
+		// no fields
+	}
 
 }

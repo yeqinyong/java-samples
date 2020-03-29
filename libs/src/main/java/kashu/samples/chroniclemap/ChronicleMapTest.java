@@ -21,7 +21,7 @@ public class ChronicleMapTest {
 
 		Map<Long, Short> rateMap = new HashMap<>(1000_0000);
 		for (int i = 0; i < 1000_000_0; i++) {
-			rateMap.put((long)i, (short)1);
+			rateMap.put((long) i, (short) 1);
 		}
 
 		long end = System.currentTimeMillis();

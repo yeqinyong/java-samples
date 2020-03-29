@@ -56,95 +56,95 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public class JMHSample_28_BlackholeHelpers {
 
-    /**
-     * Sometimes you need the black hole not in @Benchmark method, but in
-     * helper methods, because you want to pass it through to the concrete
-     * implementation which is instantiated in helper methods. In this case,
-     * you can request the black hole straight in the helper method signature.
-     * This applies to both @Setup and @TearDown methods, and also to other
-     * JMH infrastructure objects, like Control.
-     *
-     * Below is the variant of {@link JMHSample_08_DeadCode}
-     * test, but wrapped in the anonymous classes.
-     */
+	/**
+	 * Sometimes you need the black hole not in @Benchmark method, but in
+	 * helper methods, because you want to pass it through to the concrete
+	 * implementation which is instantiated in helper methods. In this case,
+	 * you can request the black hole straight in the helper method signature.
+	 * This applies to both @Setup and @TearDown methods, and also to other
+	 * JMH infrastructure objects, like Control.
+	 * <p>
+	 * Below is the variant of {@link JMHSample_08_DeadCode}
+	 * test, but wrapped in the anonymous classes.
+	 */
 
-    public interface Worker {
-        void work();
-    }
+	public interface Worker {
+		void work();
+	}
 
-    private Worker workerBaseline;
-    private Worker workerRight;
-    private Worker workerWrong;
+	private Worker workerBaseline;
+	private Worker workerRight;
+	private Worker workerWrong;
 
-    @Setup
-    public void setup(final Blackhole bh) {
-        workerBaseline = new Worker() {
-            double x;
+	@Setup
+	public void setup(final Blackhole bh) {
+		workerBaseline = new Worker() {
+			double x;
 
-            @Override
-            public void work() {
-                // do nothing
-            }
-        };
+			@Override
+			public void work() {
+				// do nothing
+			}
+		};
 
-        workerWrong = new Worker() {
-            double x;
+		workerWrong = new Worker() {
+			double x;
 
-            @Override
-            public void work() {
-                Math.log(x);
-            }
-        };
+			@Override
+			public void work() {
+				Math.log(x);
+			}
+		};
 
-        workerRight = new Worker() {
-            double x;
+		workerRight = new Worker() {
+			double x;
 
-            @Override
-            public void work() {
-                bh.consume(Math.log(x));
-            }
-        };
+			@Override
+			public void work() {
+				bh.consume(Math.log(x));
+			}
+		};
 
-    }
+	}
 
-    @Benchmark
-    public void baseline() {
-        workerBaseline.work();
-    }
+	@Benchmark
+	public void baseline() {
+		workerBaseline.work();
+	}
 
-    @Benchmark
-    public void measureWrong() {
-        workerWrong.work();
-    }
+	@Benchmark
+	public void measureWrong() {
+		workerWrong.work();
+	}
 
-    @Benchmark
-    public void measureRight() {
-        workerRight.work();
-    }
+	@Benchmark
+	public void measureRight() {
+		workerRight.work();
+	}
 
-    /*
-     * ============================== HOW TO RUN THIS TEST: ====================================
-     *
-     * You will see measureWrong() running on-par with baseline().
-     * Both measureRight() are measuring twice the baseline, so the logs are intact.
-     *
-     * You can run this test:
-     *
-     * a) Via the command line:
-     *    $ mvn clean install
-     *    $ java -jar target/benchmarks.jar JMHSample_28
-     *
-     * b) Via the Java API:
-     *    (see the JMH homepage for possible caveats when running from IDE:
-     *      http://openjdk.java.net/projects/code-tools/jmh/)
-     */
+	/*
+	 * ============================== HOW TO RUN THIS TEST: ====================================
+	 *
+	 * You will see measureWrong() running on-par with baseline().
+	 * Both measureRight() are measuring twice the baseline, so the logs are intact.
+	 *
+	 * You can run this test:
+	 *
+	 * a) Via the command line:
+	 *    $ mvn clean install
+	 *    $ java -jar target/benchmarks.jar JMHSample_28
+	 *
+	 * b) Via the Java API:
+	 *    (see the JMH homepage for possible caveats when running from IDE:
+	 *      http://openjdk.java.net/projects/code-tools/jmh/)
+	 */
 
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(JMHSample_28_BlackholeHelpers.class.getSimpleName())
-                .build();
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder()
+				.include(JMHSample_28_BlackholeHelpers.class.getSimpleName())
+				.build();
 
-        new Runner(opt).run();
-    }
+		new Runner(opt).run();
+	}
 
 }
